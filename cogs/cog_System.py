@@ -17,7 +17,7 @@ class System(commands.Cog):
     Any user can run these commands, although when listening to Music some
     of the commands could cause stuttering of the audio.
 
-    cog_System v8.12'''
+    cog_System v8.13'''
 
 
     # Define group of commands
@@ -175,22 +175,29 @@ class System(commands.Cog):
             await ctx.reply(embed = e)
 
 
+    # Command to provide Bot's server network usage
     @commands.command(name = 'netstat', help = 'Comando utilizado para verificar uso da(s) interface(s) de rede do Bot. Uma copia do comando `netstat` executado no Linux')
     async def netstat(self, ctx):
+
         async with ctx.message.channel.typing():
             UPDATE_DELAY = 1 # in seconds
-            # get the network I/O stats from psutil
-            io = psutil.net_io_counters()
-            # extract the total bytes sent and received
-            bytes_sent, bytes_recv = io.bytes_sent, io.bytes_recv
-            # sleep for `UPDATE_DELAY` seconds
-            time.sleep(UPDATE_DELAY)
-            # get the stats again
-            io_2 = psutil.net_io_counters()
-            # new - old stats gets us the speed
-            us, ds = io_2.bytes_sent - bytes_sent, io_2.bytes_recv - bytes_recv
-            # print the total download/upload along with current speeds
 
+            # Get the network I/O stats from psutil
+            io = psutil.net_io_counters()
+            
+            # Extract the total bytes sent and received
+            bytes_sent, bytes_recv = io.bytes_sent, io.bytes_recv
+            
+            # Sleep for `UPDATE_DELAY` seconds
+            time.sleep(UPDATE_DELAY)
+            
+            # Get the stats again
+            io_2 = psutil.net_io_counters()
+            
+            # New - old stats gets us the speed
+            us, ds = io_2.bytes_sent - bytes_sent, io_2.bytes_recv - bytes_recv
+            
+            # Print the total download/upload along with current speeds
             embed = discord.Embed(title = '__VELOCIDADE DE REDE__', description = '', colour= discord.Colour.teal())
             embed.add_field(name = 'Up Total Transferido:', value = f'{get_size(io_2.bytes_sent)}', inline = False)
             embed.add_field(name = 'Down Total Transferido:', value = f'{get_size(io_2.bytes_recv)}', inline = False)
