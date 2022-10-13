@@ -197,7 +197,7 @@ class System(commands.Cog):
             # New - old stats gets us the speed
             us, ds = io_2.bytes_sent - bytes_sent, io_2.bytes_recv - bytes_recv
             
-            # Print the total download/upload along with current speeds
+            # Reply with the total download/upload along with current speeds
             embed = discord.Embed(title = '__VELOCIDADE DE REDE__', description = '', colour= discord.Colour.teal())
             embed.add_field(name = 'Up Total Transferido:', value = f'{get_size(io_2.bytes_sent)}', inline = False)
             embed.add_field(name = 'Down Total Transferido:', value = f'{get_size(io_2.bytes_recv)}', inline = False)
@@ -207,11 +207,21 @@ class System(commands.Cog):
             
             await ctx.reply(embed = embed)
 
+
+    # Command to provide Bot's server uptime
     @commands.group(name = 'uptime', help = 'Comando utilizado para verificar o Uptime (Tempo desde o boot inicial) do servidor do Bot.')
     async def uptime(self, ctx):
+
+        # If no subcommands are provided by user (Ex.: uptime -bot)
         if ctx.invoked_subcommand is None:
+
+            # Check Bot's ping
             lat = round(self.bot.latency * 1000)
+
+            # Uptime in hours
             uptime_in_hours = (time.time() - psutil.boot_time()) // (60 * 60)
+
+            # Reply with the Bot's server uptime 
             embed = discord.Embed(title = '__UPTIME__', description = 'Tempo que o servidor está ligado', colour = 3447003)
             embed.add_field(name = '---', value = f':up: {uptime_in_hours} hrs')
             embed.set_footer(text = f'Ping: {lat}ms - Servidor hospedado aqui em casa!')
