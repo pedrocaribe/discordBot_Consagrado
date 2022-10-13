@@ -17,7 +17,7 @@ class System(commands.Cog):
     Any user can run these commands, although when listening to Music some
     of the commands could cause stuttering of the audio.
 
-    cog_System v8.13'''
+    cog_System v8.17'''
 
 
     # Define group of commands
@@ -159,7 +159,7 @@ class System(commands.Cog):
 
         # Trigger typing decorator
         async with ctx.message.channel.typing():
-            
+
             p = psutil.Process(pid=args[0])
             e = discord.Embed(title='__INFORMAÇÕES SOBRE PID__', description='', colour=discord.Color.teal())
             e.set_thumbnail(url='https://icons.veryicon.com/png/o/miscellaneous/function-linear-icon/process-management-5.png')
