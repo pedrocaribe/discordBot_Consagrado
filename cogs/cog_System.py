@@ -159,6 +159,7 @@ class System(commands.Cog):
 
         # Trigger typing decorator
         async with ctx.message.channel.typing():
+            
             p = psutil.Process(pid=args[0])
             e = discord.Embed(title='__INFORMAÇÕES SOBRE PID__', description='', colour=discord.Color.teal())
             e.set_thumbnail(url='https://icons.veryicon.com/png/o/miscellaneous/function-linear-icon/process-management-5.png')
@@ -179,7 +180,9 @@ class System(commands.Cog):
     @commands.command(name = 'netstat', help = 'Comando utilizado para verificar uso da(s) interface(s) de rede do Bot. Uma copia do comando `netstat` executado no Linux')
     async def netstat(self, ctx):
 
+        # Trigger typing decorator
         async with ctx.message.channel.typing():
+
             UPDATE_DELAY = 1 # in seconds
 
             # Get the network I/O stats from psutil
@@ -215,48 +218,66 @@ class System(commands.Cog):
         # If no subcommands are provided by user (Ex.: uptime -bot)
         if ctx.invoked_subcommand is None:
 
-            # Check Bot's ping
-            lat = round(self.bot.latency * 1000)
+            # Trigger typing decorator
+            async with ctx.message.channel.typing():
 
-            # Uptime in hours
-            uptime_in_hours = (time.time() - psutil.boot_time()) // (60 * 60)
+                # Check Bot's ping
+                lat = round(self.bot.latency * 1000)
 
-            # Reply with the Bot's server uptime 
-            embed = discord.Embed(title = '__UPTIME__', description = 'Tempo que o servidor está ligado', colour = 3447003)
-            embed.add_field(name = '---', value = f':up: {uptime_in_hours} hrs')
-            embed.set_footer(text = f'Ping: {lat}ms - Servidor hospedado aqui em casa!')
-            embed.set_thumbnail(url = 'https://www.iconsdb.com/icons/preview/white/time-4-xxl.png')
+                # Uptime in hours
+                uptime_in_hours = (time.time() - psutil.boot_time()) // (60 * 60)
 
-            await ctx.reply(embed = embed)
+                # Reply with the Bot's server uptime 
+                embed = discord.Embed(title = '__UPTIME__', description = 'Tempo que o servidor está ligado', colour = 3447003)
+                embed.add_field(name = '---', value = f':up: {uptime_in_hours} hrs')
+                embed.set_footer(text = f'Ping: {lat}ms - Servidor hospedado aqui em casa!')
+                embed.set_thumbnail(url = 'https://www.iconsdb.com/icons/preview/white/time-4-xxl.png')
 
+                await ctx.reply(embed = embed)
+
+
+    # Command to provide Bot's uptime
     @uptime.command(name = '-bot', help = 'Comando utilizado para verificar o Uptime (Tempo desde o kick off) do Bot')
     async def ubot(self, ctx):
         
-        PROCNAME = "python.exe"
-        pid = None
-        for proc in psutil.process_iter():
-            if PROCNAME in proc.name().lower():
-                pid = proc.pid
-                break
-        p = psutil.Process(pid)
-        p_time = p.create_time()
-        now = time.time() 
-        
-        diff = now - p_time
-        diff_s = math.floor(now - p_time)
-        diff_m = math.floor(diff_s / 60)
-        diff_h = math.floor(diff_m / 60)
-        diff_d = math.floor(diff_h / 24)
+        # Trigger typing decorator
+        async with ctx.message.channel.typing():
 
-        embed = discord.Embed(title = '__UPTIME DO BOT__', description = 'Tempo que o Bot está ligado', colour = 3447003)
-        embed.add_field(name = 'Dias:', value = diff_d, inline = False)
-        embed.add_field(name = 'Horas:', value = diff_h, inline = False)
-        embed.add_field(name = 'Minutos:', value = diff_m, inline = False)
-        embed.add_field(name = 'Segundos:', value = diff_s, inline = False)
-        embed.set_thumbnail(url = 'https://www.iconsdb.com/icons/preview/white/time-4-xxl.png')
+            # Initializing variables
+            PROCNAME = "python.exe"
+            pid = None
 
-        embed.set_footer(text = f'Data de criação do processo "{PROCNAME}": {datetime.datetime.fromtimestamp(p.create_time()).strftime("%Y-%m-%d %H:%M:%S")}')
-        await ctx.send(embed = embed)
+            # Search for PROCNAME process in running processes and assign PID to variable
+            for proc in psutil.process_iter():
+                if PROCNAME in proc.name().lower():
+                    pid = proc.pid
+                    break
+            
+            # Extract process information using psutil
+            p = psutil.Process(pid)
+
+            # Track process creation time in seconds
+            p_time = p.create_time()
+
+            # Track current time in seconds
+            now = time.time() 
+            
+            # Calculate difference between current time and process creation time (in seconds, minutes, hours and days)
+            diff_s = math.floor(now - p_time)
+            diff_m = math.floor(diff_s / 60)
+            diff_h = math.floor(diff_m / 60)
+            diff_d = math.floor(diff_h / 24)
+
+            # Reply with Bot's uptime
+            embed = discord.Embed(title = '__UPTIME DO BOT__', description = 'Tempo que o Bot está ligado', colour = 3447003)
+            embed.add_field(name = 'Dias:', value = diff_d, inline = False)
+            embed.add_field(name = 'Horas:', value = diff_h, inline = False)
+            embed.add_field(name = 'Minutos:', value = diff_m, inline = False)
+            embed.add_field(name = 'Segundos:', value = diff_s, inline = False)
+            embed.set_thumbnail(url = 'https://www.iconsdb.com/icons/preview/white/time-4-xxl.png')
+
+            embed.set_footer(text = f'Data de criação do processo "{PROCNAME}": {datetime.datetime.fromtimestamp(p.create_time()).strftime("%Y-%m-%d %H:%M:%S")}')
+            await ctx.send(embed = embed)
 
 def toEmbed(ctx, fields, embed, d_unit):
     for field in fields:
