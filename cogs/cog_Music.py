@@ -27,6 +27,13 @@ class Player(commands.Cog):
         self.FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
 
         self.setup()
+
+        '''Commands defined in this cog are for music playing through a voice channel.
+        It was designed to always use YouTube and FFMPEG, as no other APIs seem to work
+        as expected.
+
+        cog_Music v4.01'''
+
     # Create a Playlist for the Server the Bot is connected to
     def setup(self):
         for guild in self.bot.guilds:
