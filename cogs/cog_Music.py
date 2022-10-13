@@ -84,7 +84,7 @@ class Player(commands.Cog):
             url = pafy.new(song).getbestaudio().url
             self.song_queue[ctx.guild.id].pop(0) ##
         except:
-            ctx.voice_cliente.stop() # This is a test due to YouTube error for when video is rated for over 18 audience
+            ctx.voice_client.stop() # This is a test due to YouTube error for when video is rated for over 18 audience
             pass
         ctx.voice_client.play(discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(url, **self.FFMPEG_OPTIONS)), after = lambda error: self.bot.loop.create_task(self.check_queue_(ctx)))
         ctx.voice_client.source.volume = 0.5
